@@ -4,6 +4,9 @@ public class SaveTheBilby {
   private FileRepository fileRepository;
   private UuidManager uuidManager;
   private ArrayList<Location> locations;
+  private BilbyManager bilbyManager;
+  private FoxManager foxManager;
+  private CatManager catManager;
   private String areaName;
   private int monthsLeft;
 
@@ -11,6 +14,9 @@ public class SaveTheBilby {
     uuidManager = new UuidManager();
     fileRepository = new FileRepository();
     locations = new ArrayList<Location>();
+    bilbyManager = new BilbyManager(uuidManager);
+    foxManager = new FoxManager(uuidManager);
+    catManager = new CatManager(uuidManager);
     areaName = "";
     monthsLeft = 12;
   }
@@ -23,15 +29,42 @@ public class SaveTheBilby {
       int bilbiesCount = populationsOfLocations.get(i)[0];
       int foxesCount = populationsOfLocations.get(i)[1];
       int catsCount = populationsOfLocations.get(i)[2];
-      // this is not ideal, too many params
-      locations.add(new Location(uuidManager, i, bilbiesCount, foxesCount, catsCount));
+
+      Location location = new Location(uuidManager, i);
+      location.setBilbyManager(bilbyManager);
+      location.setFoxManager(foxManager);
+      location.setCatManager(catManager);
+      locations.add(location);
+      bilbyManager.createNewAnimals(i, bilbiesCount, false);
+      foxManager.createNewAnimals(i, foxesCount, false);
+      catManager.createNewAnimals(i, catsCount, false);
     }
   }
 
   public void simulate() {
     while(monthsLeft > 0) {
+      System.out.print("Month Left: ");
+      System.out.println(monthsLeft);
+
       for(Location location : locations) {
         location.runMonthlySimulation();
+
+        int locationId = location.getLocationId();
+
+        System.out.print("Location: ");
+        System.out.print(locationId);
+        System.out.print(" - ");
+        System.out.print(bilbyManager.getAliveCount(locationId));
+        System.out.print(", ");
+        System.out.print(bilbyManager.getDeadCount(locationId));
+        System.out.print(", ");
+        System.out.print(foxManager.getAliveCount(locationId));
+        System.out.print(", ");
+        System.out.print(foxManager.getDeadCount(locationId));
+        System.out.print(", ");
+        System.out.print(catManager.getAliveCount(locationId));
+        System.out.print(", ");
+        System.out.println(catManager.getDeadCount(locationId));
       }
 
       // list current result for each location
@@ -47,20 +80,6 @@ public class SaveTheBilby {
     // ask area name
 
     saveTheBilby.setupEnvironment();
-    saveTheBilby.simulate();
-
-    for(Location location : saveTheBilby.locations) {
-      System.out.print(location.getAliveBilbyCount());
-      System.out.print(", ");
-      System.out.print(location.getDeadBilbyCount());
-      System.out.print(", ");
-      System.out.print(location.getAliveFoxCount());
-      System.out.print(", ");
-      System.out.print(location.getDeadFoxCount());
-      System.out.print(", ");
-      System.out.print(location.getAliveCatCount());
-      System.out.print(", ");
-      System.out.println(location.getDeadCatCount());
-    }
+    saveTheBilby.simulate();    
   }
 }

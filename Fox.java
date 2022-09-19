@@ -19,11 +19,7 @@ public class Fox extends Animal {
     return randomNumber <= 10;
   }
 
-  public boolean huntBilbyAttempt(boolean haveBilbiesLeft) {
-    if (!haveBilbiesLeft) {
-      return false;
-    }
-
+  public boolean huntBilbyAttempt() {
     int randomNumber = randomUtils.getRandom(100);
     return randomNumber <= 40;
   }

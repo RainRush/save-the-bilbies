@@ -15,15 +15,11 @@ public class Cat extends Animal {
   }
 
   public boolean giveBirthAttempt() {
-    // pull this logic out
     int randomNumber = randomUtils.getRandom(100);
     return randomNumber <= 20;
   }
 
-  public boolean huntBilbyAttempt(boolean haveBilbiesLeft) {
-    if (!haveBilbiesLeft) {
-      return false;
-    }
+  public boolean huntBilbyAttempt() {
     int randomNumber = randomUtils.getRandom(100);
     return randomNumber <= 60;
   }

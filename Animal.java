@@ -22,16 +22,32 @@ public class Animal {
     return uniqueId;
   }
 
+  public void setUniqueId(String _uniqueId) {
+    uniqueId = _uniqueId;
+  }
+
   public int getLocationId() {
     return locationId;
+  }
+
+  public void setLocationId(int _locationId) {
+    locationId = _locationId;
   }
 
   public boolean getStatus() {
     return status;
   }
 
+  public void setStatus(boolean _status) {
+    status = _status;
+  }
+
   public boolean getBornDuringSimulation() {
     return bornDuringSimulation;
+  }
+
+  public void setBornDuringSimulation(boolean _bornDuringSimulation) {
+    bornDuringSimulation = _bornDuringSimulation;
   }
 
   public boolean checkNewBirth() {
