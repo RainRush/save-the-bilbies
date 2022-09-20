@@ -16,6 +16,10 @@ public class Bilby extends Animal {
     return randomUtils.hasSucceedByPercentage(GIVE_BIRTH_RATE);
   }
 
+  public void relocateTo(int relocateToLocationId) {
+    setLocationId(relocateToLocationId);
+  }
+
   public void dieFromHunt() {
     setDeath();
   }

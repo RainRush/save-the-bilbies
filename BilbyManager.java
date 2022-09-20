@@ -52,15 +52,28 @@ public class BilbyManager extends AnimalManager<Bilby> {
     }
   }
 
+  public void relocate(int relocateFromLocationId, int relocateToLocationId, int amountToRelocate) {
+    while (amountToRelocate > 0) {
+      for (Bilby animal : animals) {
+        if (animal.checkAliveInLocation(relocateFromLocationId)) {
+          animal.relocateTo(relocateToLocationId);
+          amountToRelocate--;
+          break;
+        }
+      }
+    }
+  }
+
   public void killOverloadedBilbiesInLocation(int locationId) {
     int LOCATION_LIMIT = 20;
     int bilbiesInLocationCount = this.getAliveCount(locationId);
     if (bilbiesInLocationCount > LOCATION_LIMIT) {
       int bilbiesExcess = bilbiesInLocationCount - LOCATION_LIMIT;
-      for (int i = 0; i < bilbiesExcess; i++) {
+      while (bilbiesExcess > 0) {
         for (Bilby animal : animals) {
           if (animal.checkAliveInLocation(locationId)) {
             animal.dieFromLocationOverloaded();
+            bilbiesExcess--;
             break;
           }
         }
