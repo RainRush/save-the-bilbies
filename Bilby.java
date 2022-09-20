@@ -12,15 +12,15 @@ public class Bilby extends Animal {
   }
 
   public boolean giveBirthAttempt() {
-    int randomNumber = randomUtils.getRandom(100);
-    return randomNumber <= 15;
+    int GIVE_BIRTH_RATE = 15;
+    return randomUtils.hasSucceedByPercentage(GIVE_BIRTH_RATE);
   }
 
   public void dieFromHunt() {
     setDeath();
   }
 
-  public void dieFromExcess() {
+  public void dieFromLocationOverloaded() {
     setDeath();
   }
 }

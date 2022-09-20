@@ -25,10 +25,8 @@ public class FoxManager extends AnimalManager<Fox> {
   public void bearNewAnimals(int locationId) {
     int newBornCount = 0;
     for (Fox animal : animals) {
-      boolean isAlive = animal.checkAlive();
-      boolean isInLocation = animal.getLocationId() == locationId;
       boolean isGivingBirth = animal.giveBirthAttempt();
-      if (isAlive && isInLocation && isGivingBirth) {
+      if (animal.checkAliveInLocation(locationId) && isGivingBirth) {
         newBornCount++;
       }
     }
@@ -38,10 +36,8 @@ public class FoxManager extends AnimalManager<Fox> {
 
   public void executeHunt(BilbyManager bilbyManager, int locationId) {
     for (Fox animal : animals) {
-      boolean isInLocation = animal.getLocationId() == locationId;
-      boolean isAlive = animal.checkAlive();
       boolean haveBilbiesLeft = bilbyManager.checkBilbiesLeftInLocation(locationId);
-      if (isAlive && isInLocation && haveBilbiesLeft) {
+      if (animal.checkAliveInLocation(locationId) && haveBilbiesLeft) {
         if (animal.huntBilbyAttempt()) {
           bilbyManager.chooseOneToDieFromHunt(locationId);
         } else {
@@ -49,5 +45,18 @@ public class FoxManager extends AnimalManager<Fox> {
         }
       }
     }
+  }
+
+  public int interveneLocation(int locationId) {
+    int animalIntervenedCount = 0;
+    for (Fox animal : animals) {
+      if (animal.checkAliveInLocation(locationId)) {
+        if (animal.interventionAttempt()) {
+          animal.dieFromIntervention();
+          animalIntervenedCount++;
+        } 
+      }
+    }
+    return animalIntervenedCount;
   }
 }

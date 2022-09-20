@@ -58,6 +58,18 @@ public class Animal {
     return status;
   }
 
+  public boolean checkAliveInLocation(int locationId) {
+    boolean isAlive = this.checkAlive();
+    boolean isInLocation = this.getLocationId() == locationId;
+    return isAlive && isInLocation;
+  }
+
+  public boolean checkNotAliveInLocation(int locationId) {
+    boolean isNotAlive = !this.checkAlive();
+    boolean isInLocation = this.getLocationId() == locationId;
+    return isNotAlive && isInLocation;
+  }
+
   public void relocateTo(int _locationId) {
     locationId = _locationId;
   }

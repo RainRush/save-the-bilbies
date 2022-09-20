@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class SaveTheBilby {
   private FileRepository fileRepository;
@@ -19,6 +20,130 @@ public class SaveTheBilby {
     catManager = new CatManager(uuidManager);
     areaName = "";
     monthsLeft = 12;
+  }
+
+  private void relocateEnquiry() {
+    // int relocateFrom;
+    // int relocateTo;
+    // int amountToRelocate = 0;
+    // ask from which location (show list)
+    // to which location (show list)
+    // how many
+
+    // are there rules of relocation?
+    // while(!selectedOption.equalsIgnoreCase("B") && !availableLocationIds.contains(selectedOption)) {
+
+    // }
+
+    System.out.println("Moved # bilbies from location # to location #");
+  }
+
+  private void displayInterventionActions(ArrayList<String> availableLocationIds) {
+    System.out.println("Intervention Actions: ");
+    for (String availableLocationId : availableLocationIds) {
+      for (Location location : locations) {
+        int locationId = location.getLocationId();
+        String stringifiedLocationId = Integer.toString(locationId);
+        if (stringifiedLocationId.equals(availableLocationId)) {
+          System.out.println(availableLocationId + " - " + foxManager.getAliveCount(locationId) + " foxes and " + catManager.getAliveCount(locationId));
+        }
+      }
+    }
+    System.out.println("B - To Go Back to User Actions.");
+  }
+
+  private void executeInterventionOnLocation(int selectedLocationId) {
+    for (Location location : locations) {
+      if (location.getLocationId() == selectedLocationId) {
+        location.intervene();
+      }
+    }
+  }
+
+  private ArrayList<String> getAvailableLocations() {
+    ArrayList<String> availableLocations = new ArrayList<String>();
+    for (Location location : locations) {
+      if (location.checkInterventionAvailibility()) {
+        availableLocations.add(Integer.toString(location.getLocationId()));
+      }
+    }
+    return availableLocations;
+  }
+
+  private void interveneEnquiry() {
+    String selectedOption = "";
+    ArrayList<String> availableLocationIds = this.getAvailableLocations();
+    Scanner scanner = new Scanner(System.in);
+
+    while(!selectedOption.equalsIgnoreCase("B") && !availableLocationIds.contains(selectedOption)) {
+      this.displayInterventionActions(availableLocationIds);
+      selectedOption = scanner.nextLine();
+
+      if (selectedOption.equalsIgnoreCase("B")) {
+        System.out.println("Back to User Options.");
+      } else if (availableLocationIds.contains(selectedOption)) {
+        int selectedLocationId = Integer.parseInt(selectedOption);
+        System.out.println("Intervened in location " + selectedLocationId);
+        this.executeInterventionOnLocation(selectedLocationId);
+      } else {
+        System.out.println("Invalid option");
+      }
+    }
+  }
+
+  private void displayMonthlyStateOfAllLocations() {
+    for(Location location : locations) {
+        int locationId = location.getLocationId();
+
+        System.out.print("Location: ");
+        System.out.print(locationId);
+        System.out.print(" - ");
+        System.out.print(bilbyManager.getAliveCount(locationId));
+        System.out.print(", ");
+        System.out.print(bilbyManager.getDeadCount(locationId));
+        System.out.print(", ");
+        System.out.print(foxManager.getAliveCount(locationId));
+        System.out.print(", ");
+        System.out.print(foxManager.getDeadCount(locationId));
+        System.out.print(", ");
+        System.out.print(catManager.getAliveCount(locationId));
+        System.out.print(", ");
+        System.out.println(catManager.getDeadCount(locationId));
+      }
+  }
+
+  private void displayMonthLeft(int monthsLeft) {
+    System.out.println("Month Left: " + monthsLeft);
+  }
+
+  private void displayUserActions() {
+    System.out.println("User Actions: ");
+    System.out.println("1 - Move bilby location.");
+    System.out.println("2 - Intervene.");
+    System.out.println("3 - Continue monthly simulation.");
+  }
+
+  private void monthlyUserEnquiry() {
+    String selectedOption = "";
+    Scanner scanner = new Scanner(System.in);
+    
+    while(!selectedOption.equalsIgnoreCase("3")) {
+      this.displayMonthLeft(monthsLeft);
+      this.displayMonthlyStateOfAllLocations();
+      this.displayUserActions();
+
+      selectedOption = scanner.nextLine();
+
+      if (selectedOption.equalsIgnoreCase("1")) {
+        this.relocateEnquiry();
+      } else if (selectedOption.equalsIgnoreCase("2")) {
+        this.interveneEnquiry();
+      } else if (selectedOption.equalsIgnoreCase("3")) {
+        System.out.println("Monthly simulation...");
+      } else {
+        System.out.println("Invalid input.");
+      }
+    }
   }
 
   public void setupEnvironment() {
@@ -43,43 +168,33 @@ public class SaveTheBilby {
 
   public void simulate() {
     while(monthsLeft > 0) {
-      System.out.print("Month Left: ");
-      System.out.println(monthsLeft);
-
+      monthsLeft--;
       for(Location location : locations) {
         location.runMonthlySimulation();
-
-        int locationId = location.getLocationId();
-
-        System.out.print("Location: ");
-        System.out.print(locationId);
-        System.out.print(" - ");
-        System.out.print(bilbyManager.getAliveCount(locationId));
-        System.out.print(", ");
-        System.out.print(bilbyManager.getDeadCount(locationId));
-        System.out.print(", ");
-        System.out.print(foxManager.getAliveCount(locationId));
-        System.out.print(", ");
-        System.out.print(foxManager.getDeadCount(locationId));
-        System.out.print(", ");
-        System.out.print(catManager.getAliveCount(locationId));
-        System.out.print(", ");
-        System.out.println(catManager.getDeadCount(locationId));
       }
 
-      // list current result for each location
-      // ask if interventions are needed
-      monthsLeft--;
+      this.monthlyUserEnquiry();
     }
+  }
+
+  public void finishSimulationAndPersist() {
+    System.out.println("Finished simulation.");
+    System.out.println("The result is: ");
+    String populationEndFilePath = "populationEnd.txt";
+    System.out.println("Result written to file at path: " + populationEndFilePath);
+    // to set up
+    int[][] results = new int[0][0];
+    fileRepository.writeResultToPath(populationEndFilePath, results);
   }
 
   public static void main(String[] args) {
     SaveTheBilby saveTheBilby = new SaveTheBilby();
 
-    // display greeting message
+    System.out.println("Welcome to Save The Bilby simulation.");
     // ask area name
 
     saveTheBilby.setupEnvironment();
-    saveTheBilby.simulate();    
+    saveTheBilby.simulate();
+    saveTheBilby.finishSimulationAndPersist();
   }
 }

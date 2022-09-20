@@ -10,9 +10,7 @@ public class AnimalManager<T extends Animal> {
   public int getAliveCount(int locationId) {
     int aliveCount = 0;
     for (T animal : animals) {
-      boolean isInLocation = animal.getLocationId() == locationId;
-      boolean isAlive = animal.checkAlive();
-      if (isInLocation && isAlive) {
+      if (animal.checkAliveInLocation(locationId)) {
         aliveCount++;
       }
     }
@@ -22,9 +20,7 @@ public class AnimalManager<T extends Animal> {
   public int getDeadCount(int locationId) {
     int deadCount = 0;
     for (T animal : animals) {
-      boolean isInLocation = animal.getLocationId() == locationId;
-      boolean isNotAlive = !animal.checkAlive();
-      if (isInLocation && isNotAlive) {
+      if (animal.checkNotAliveInLocation(locationId)) {
         deadCount++;
       }
     }

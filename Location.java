@@ -6,6 +6,7 @@ public class Location {
   private BilbyManager bilbyManager;
   private FoxManager foxManager;
   private CatManager catManager;
+  private boolean haveIntervenedLocation = false;
 
   public Location() {
     locationId = 0;
@@ -29,7 +30,13 @@ public class Location {
     catManager = _catManager;
   }
 
+  public boolean checkInterventionAvailibility() {
+    return !haveIntervenedLocation;
+  }
+
   public void runMonthlySimulation() {
+    bilbyManager.killOverloadedBilbiesInLocation(locationId);
+
     bilbyManager.bearNewAnimals(locationId);
     foxManager.bearNewAnimals(locationId);
     catManager.bearNewAnimals(locationId);
@@ -38,12 +45,11 @@ public class Location {
     catManager.executeHunt(bilbyManager, locationId);
   }
 
-  public void relocateOutBilby() {
-    // to implement
-  }
-
-  public void relocateInBilby() {
-    // to implement
+  public void intervene() {
+    int foxesIntervenedCount = foxManager.interveneLocation(locationId);
+    int catsIntervenedCount = catManager.interveneLocation(locationId);
+    System.out.println(foxesIntervenedCount + " foxes and " + catsIntervenedCount + " cats had been killed");
+    haveIntervenedLocation = true;
   }
 
   public int getLocationId() {

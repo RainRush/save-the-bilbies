@@ -25,10 +25,8 @@ public class BilbyManager extends AnimalManager<Bilby> {
   public void bearNewAnimals(int locationId) {
     int newBornCount = 0;
     for (Bilby animal : animals) {
-      boolean isAlive = animal.checkAlive();
-      boolean isInLocation = animal.getLocationId() == locationId;
       boolean isGivingBirth = animal.giveBirthAttempt();
-      if (isAlive && isInLocation && isGivingBirth) {
+      if (animal.checkAliveInLocation(locationId) && isGivingBirth) {
         newBornCount++;
       }
     }
@@ -38,9 +36,7 @@ public class BilbyManager extends AnimalManager<Bilby> {
 
   public boolean checkBilbiesLeftInLocation(int locationId) {
     for (Bilby animal : animals) {
-      boolean isInLocation = animal.getLocationId() == locationId;
-      boolean isAlive = animal.checkAlive();
-      if (isInLocation && isAlive) {
+      if (animal.checkAliveInLocation(locationId)) {
         return true;
       }
     }
@@ -49,11 +45,25 @@ public class BilbyManager extends AnimalManager<Bilby> {
 
   public void chooseOneToDieFromHunt(int locationId) {
     for (Bilby animal : animals) {
-      boolean isInLocation = animal.getLocationId() == locationId;
-      boolean isAlive = animal.checkAlive();
-      if (isAlive && isInLocation) {
+      if (animal.checkAliveInLocation(locationId)) {
         animal.dieFromHunt();
         break;
+      }
+    }
+  }
+
+  public void killOverloadedBilbiesInLocation(int locationId) {
+    int LOCATION_LIMIT = 20;
+    int bilbiesInLocationCount = this.getAliveCount(locationId);
+    if (bilbiesInLocationCount > LOCATION_LIMIT) {
+      int bilbiesExcess = bilbiesInLocationCount - LOCATION_LIMIT;
+      for (int i = 0; i < bilbiesExcess; i++) {
+        for (Bilby animal : animals) {
+          if (animal.checkAliveInLocation(locationId)) {
+            animal.dieFromLocationOverloaded();
+            break;
+          }
+        }
       }
     }
   }

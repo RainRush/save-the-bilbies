@@ -15,28 +15,32 @@ public class Cat extends Animal {
   }
 
   public boolean giveBirthAttempt() {
-    int randomNumber = randomUtils.getRandom(100);
-    return randomNumber <= 20;
+    int GIVE_BIRTH_RATE = 20;
+    return randomUtils.hasSucceedByPercentage(GIVE_BIRTH_RATE);
   }
 
   public boolean huntBilbyAttempt() {
-    int randomNumber = randomUtils.getRandom(100);
-    return randomNumber <= 60;
+    int HUNT_SUCCESS_RATE = 60;
+    return randomUtils.hasSucceedByPercentage(HUNT_SUCCESS_RATE);
   }
 
   public boolean interventionAttempt() {
-    // to do
-    return true;
+    int INTERVENTION_SUCCESS_RATE = 100;
+    return randomUtils.hasSucceedByPercentage(INTERVENTION_SUCCESS_RATE);
   }
 
   public void dieFromIntervention() {
     setDeath();
   }
 
+  private void dieFromNoHealthLeft() {
+    setDeath();
+  }
+
   public void punishFailHunt() {
     health--;
     if (health == 0) {
-      setDeath();
+      dieFromNoHealthLeft();
     }
   }
 }
