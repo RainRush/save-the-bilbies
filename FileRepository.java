@@ -1,5 +1,7 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -29,7 +31,40 @@ public class FileRepository {
     return populationsOfLocations;
   }
 
-  public void writeResultToPath(String filePath, int[][] results) {
-    // to be implemented
+  private void upsertFile(String filePath) {
+    try {
+      File fileObj = new File(filePath);
+      if (fileObj.createNewFile()) {
+        System.out.println("File created: " + fileObj.getName());
+      } else {
+        System.out.println("File already exists.");
+      }
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+  }
+
+  public void writeResultToPath(String filePath, ArrayList<int[]> results) {
+    this.upsertFile(filePath);
+
+    try {
+      FileWriter myWriter = new FileWriter(filePath);
+      for (int[] resultRow : results) {
+        String rowMessage = "";
+        for (int i = 0; i < resultRow.length; i++) {
+          rowMessage += Integer.toString(resultRow[i]);
+          if (i < resultRow.length - 1) {
+            rowMessage += ",";
+          }
+        }
+        myWriter.write(rowMessage + "\n");
+      }
+      myWriter.close();
+      System.out.println("Successfully wrote to the file.");
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
   }
 }

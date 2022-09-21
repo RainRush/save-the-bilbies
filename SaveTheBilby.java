@@ -263,11 +263,21 @@ public class SaveTheBilby {
     System.out.println("The result is: ");
     // show the results
     // show some statistics
-    String populationEndFilePath = "populationEnd.txt";
+    String populationEndFilePath = "populationFinish.txt";
     System.out.println("Result written to file at path: " + populationEndFilePath);
 
-    // to set up
-    int[][] results = new int[0][0];
+    ArrayList<int[]> results = new ArrayList<int[]>();
+    for (Location location : locations) {
+      int locationId = location.getLocationId();
+      int bilbiesAlive = bilbyManager.getAliveCount(locationId);
+      int bilbiesDead = bilbyManager.getDeadCount(locationId);
+      int foxesAlive = foxManager.getAliveCount(locationId);
+      int foxesDead = foxManager.getDeadCount(locationId);
+      int catsAlive = catManager.getAliveCount(locationId);
+      int catsDead = catManager.getDeadCount(locationId);
+      int[] locationResult = {bilbiesAlive, bilbiesDead, foxesAlive, foxesDead, catsAlive, catsDead};
+      results.add(locationResult);
+    }
     fileRepository.writeResultToPath(populationEndFilePath, results);
   }
 
