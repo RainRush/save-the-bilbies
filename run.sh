@@ -1,3 +1,5 @@
+cd ./src
+
 javac FileRepository.java
 javac UuidManager.java
 javac Random.java
