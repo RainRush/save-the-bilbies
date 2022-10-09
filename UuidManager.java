@@ -18,8 +18,9 @@ public class UuidManager {
   }
 
   private String generateUniqueIdByPrefix(String prefix) {
-    String generatedUniqueId = prefix;
+    String generatedUniqueId = "";
     do {
+      generatedUniqueId = prefix;
       for (int i = 0; i < 3; i++) {
         generatedUniqueId += this.generateRandomAlphanumeric();
       }
