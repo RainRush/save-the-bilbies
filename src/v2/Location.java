@@ -164,4 +164,32 @@ public class Location {
     }
     return count;
   }
+
+  public void intervene() {
+    int foxesIntervenedCount = interveneByAnimalType("FOX");
+    int catsIntervenedCount = interveneByAnimalType("CAT");
+    System.out.println(foxesIntervenedCount + " foxes and " + catsIntervenedCount + " cats had been killed");
+    haveIntervenedLocation = true;
+  }
+
+  private int interveneByAnimalType(String animalType) {
+    int animalIntervenedCount = 0;
+    if (animalType == "CAT") {
+      for (Cat cat : cats) {
+        if (cat.checkAlive() && cat.interventionAttempt()) {
+          cat.dieFromIntervention();
+          animalIntervenedCount++;
+        }
+      }
+    }
+    if (animalType == "FOX") {
+      for (Fox fox : foxes) {
+        if (fox.checkAlive() && fox.interventionAttempt()) {
+          fox.dieFromIntervention();
+          animalIntervenedCount++;
+        }
+      }
+    }
+    return animalIntervenedCount;
+  }
 }

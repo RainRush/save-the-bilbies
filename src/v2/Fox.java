@@ -25,7 +25,7 @@ public class Fox extends Animal {
   }
 
   public boolean interventionAttempt() {
-    int INTERVENTION_SUCCESS_RATE = 100;
+    int INTERVENTION_SUCCESS_RATE = 50;
     return randomUtils.hasSucceedByPercentage(INTERVENTION_SUCCESS_RATE);
   }
 

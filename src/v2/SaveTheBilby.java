@@ -16,6 +16,59 @@ public class SaveTheBilby {
     monthsLeft = 12;
   }
 
+  private void displayInterventionActions(ArrayList<String> availableLocationIds) {
+    System.out.println("Intervention Actions: ");
+    for (String availableLocationId : availableLocationIds) {
+      for (Location location : locations) {
+        int locationId = location.getLocationId();
+        String stringifiedLocationId = Integer.toString(locationId);
+        if (stringifiedLocationId.equals(availableLocationId)) {
+          System.out.println(availableLocationId + " - " + location.getAnimalCountByAliveDeath("FOX", "ALIVE") + " foxes and " + location.getAnimalCountByAliveDeath("CAT", "ALIVE") + " cats");
+        }
+      }
+    }
+    System.out.println("B - To Go Back to User Actions.");
+  }
+
+  private void executeInterventionOnLocation(int selectedLocationId) {
+    for (Location location : locations) {
+      if (location.getLocationId() == selectedLocationId) {
+        location.intervene();
+      }
+    }
+  }
+
+  private ArrayList<String> getInterveneAvailableLocations() {
+    ArrayList<String> interveneAvailableLocations = new ArrayList<String>();
+    for (Location location : locations) {
+      if (location.checkInterventionAvailibility()) {
+        interveneAvailableLocations.add(Integer.toString(location.getLocationId()));
+      }
+    }
+    return interveneAvailableLocations;
+  }
+
+  private void interveneEnquiry() {
+    String selectedOption = "";
+    ArrayList<String> availableLocationIds = this.getInterveneAvailableLocations();
+    Scanner scanner = new Scanner(System.in);
+
+    while(!selectedOption.equalsIgnoreCase("B") && !availableLocationIds.contains(selectedOption)) {
+      this.displayInterventionActions(availableLocationIds);
+      selectedOption = scanner.nextLine();
+
+      if (selectedOption.equalsIgnoreCase("B")) {
+        System.out.println("Back to User Options.");
+      } else if (availableLocationIds.contains(selectedOption)) {
+        int selectedLocationId = Integer.parseInt(selectedOption);
+        System.out.println("Intervened in location " + selectedLocationId);
+        this.executeInterventionOnLocation(selectedLocationId);
+      } else {
+        System.out.println("Invalid option");
+      }
+    }
+  }
+
   private void displayMonthlyStateOfAllLocations() {
     for(Location location : locations) {
         int locationId = location.getLocationId();
@@ -63,7 +116,7 @@ public class SaveTheBilby {
       if (selectedOption.equalsIgnoreCase("1")) {
         // this.relocateEnquiry();
       } else if (selectedOption.equalsIgnoreCase("2")) {
-        // this.interveneEnquiry();
+        this.interveneEnquiry();
       } else if (selectedOption.equalsIgnoreCase("3")) {
         System.out.println("Monthly simulation...");
       } else {
