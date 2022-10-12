@@ -192,4 +192,24 @@ public class Location {
     }
     return animalIntervenedCount;
   }
+
+  public void relocateBilbiesIn(ArrayList<Bilby> bilbiesToRelocateIn) {
+    bilbies.addAll(bilbiesToRelocateIn);
+  }
+
+  public ArrayList<Bilby> relocateBilbiesOut(int initAmountToRelocate) {
+    int amountToRelocate = initAmountToRelocate;
+    ArrayList<Bilby> bilbiesToRelocateOut = new ArrayList<Bilby>();
+    while (amountToRelocate > 0) {
+      for (Bilby bilby : bilbies) {
+        if (bilby.checkAlive()) {
+          bilbiesToRelocateOut.add(bilby);
+          bilbies.remove(bilby);
+          amountToRelocate--;
+          break;
+        }
+      }
+    }
+    return bilbiesToRelocateOut;
+  }
 }

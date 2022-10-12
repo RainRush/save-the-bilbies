@@ -16,6 +16,111 @@ public class SaveTheBilby {
     monthsLeft = 12;
   }
 
+  private ArrayList<String> getRelocateFromAvailableLocations() {
+    ArrayList<String> relocateAvailableLocations = new ArrayList<String>();
+    int LOCATION_LIMIT = 20;
+    for (Location location : locations) {
+      int bilbiesInLocationCount = location.getAnimalCountByAliveDeath("BILBY", "ALIVE");
+      if (bilbiesInLocationCount > LOCATION_LIMIT) {
+        relocateAvailableLocations.add(Integer.toString(location.getLocationId()));
+      }
+    }
+    return relocateAvailableLocations;
+  }
+
+  private ArrayList<String> getRelocateToAvailableLocations() {
+    ArrayList<String> relocateAvailableLocations = new ArrayList<String>();
+    for (Location location : locations) {
+      relocateAvailableLocations.add(Integer.toString(location.getLocationId()));
+    }
+    return relocateAvailableLocations;
+  }
+
+  private void displayRelocateFromActions(ArrayList<String> availableLocationIds) {
+    int LOCATION_LIMIT = 20;
+    for (String availableLocationId : availableLocationIds) {
+      for (Location location : locations) {
+        int locationId = location.getLocationId();
+        String stringifiedLocationId = Integer.toString(locationId);
+        if (stringifiedLocationId.equals(availableLocationId)) {
+          System.out.println(availableLocationId + " - " + (location.getAnimalCountByAliveDeath("BILBY", "ALIVE") - LOCATION_LIMIT) + " bilbies exceeded location limit, choose to move");
+        }
+      }
+    }
+    System.out.println("B - To Go Back to User Actions.");
+  }
+
+  private void displayRelocateToActions(ArrayList<String> availableLocationIds) {
+    for (String availableLocationId : availableLocationIds) {
+      for (Location location : locations) {
+        int locationId = location.getLocationId();
+        String stringifiedLocationId = Integer.toString(locationId);
+        if (stringifiedLocationId.equals(availableLocationId)) {
+          System.out.println(availableLocationId + " - " + location.getAnimalCountByAliveDeath("BILBY", "ALIVE") + " bilbies in location");
+        }
+      }
+    }
+    System.out.println("B - To Go Back to User Actions.");
+  }
+
+  private void relocateEnquiry() {
+    String stringifiedRelocateFrom = "";
+    String stringifiedRelocateTo = "";
+    int relocateFromLocationId = -1;
+    int relocateToLocationId = -1;
+    int amountToRelocate = 0;
+    boolean goBackFlag = false;
+    ArrayList<String> availableRelocateFromLocationIds = this.getRelocateFromAvailableLocations();
+    ArrayList<String> availableRelocateToLocationIds = this.getRelocateToAvailableLocations();
+    Scanner scanner = new Scanner(System.in);
+
+    while(!goBackFlag && !availableRelocateFromLocationIds.contains(stringifiedRelocateFrom)) {
+      System.out.println("Choose location to relocate from");
+      this.displayRelocateFromActions(availableRelocateFromLocationIds);
+      stringifiedRelocateFrom = scanner.nextLine();
+      if (stringifiedRelocateFrom.equalsIgnoreCase("B")) {
+        goBackFlag = true;
+      } else if (availableRelocateFromLocationIds.contains(stringifiedRelocateFrom)) {
+        relocateFromLocationId = Integer.parseInt(stringifiedRelocateFrom);
+      } else {
+        System.out.println("Invalid option");
+      }
+    }
+
+    while(!goBackFlag && !availableRelocateToLocationIds.contains(stringifiedRelocateTo)) {
+      System.out.println("Choose location to relocate to");
+      this.displayRelocateToActions(availableRelocateToLocationIds);
+      stringifiedRelocateTo = scanner.nextLine();
+      if (stringifiedRelocateTo.equalsIgnoreCase("B")) {
+        goBackFlag = true;
+      } else if (availableRelocateToLocationIds.contains(stringifiedRelocateTo)) {
+        relocateToLocationId = Integer.parseInt(stringifiedRelocateTo);
+      } else {
+        System.out.println("Invalid option");
+      }
+    }
+
+    if (goBackFlag) {
+      System.out.println("Back to User Options.");
+    } else {
+      int LOCATION_LIMIT = 20;
+      ArrayList<Bilby> bilbiesToRelocate = new ArrayList<Bilby>();
+      for (Location location : locations) {
+        if (location.getLocationId() == relocateFromLocationId) {
+          amountToRelocate = location.getAnimalCountByAliveDeath("BILBY", "ALIVE") - LOCATION_LIMIT;
+          bilbiesToRelocate = location.relocateBilbiesOut(amountToRelocate);
+        }
+      }
+      for (Location location : locations) {
+        if (location.getLocationId() == relocateToLocationId) {
+          location.relocateBilbiesIn(bilbiesToRelocate);
+        }
+      }
+      
+      System.out.println("Moved " + amountToRelocate + " bilbies from location " + relocateFromLocationId + " to location " + relocateToLocationId);
+    }
+  }
+
   private void displayInterventionActions(ArrayList<String> availableLocationIds) {
     System.out.println("Intervention Actions: ");
     for (String availableLocationId : availableLocationIds) {
@@ -114,7 +219,7 @@ public class SaveTheBilby {
       selectedOption = scanner.nextLine();
 
       if (selectedOption.equalsIgnoreCase("1")) {
-        // this.relocateEnquiry();
+        this.relocateEnquiry();
       } else if (selectedOption.equalsIgnoreCase("2")) {
         this.interveneEnquiry();
       } else if (selectedOption.equalsIgnoreCase("3")) {
