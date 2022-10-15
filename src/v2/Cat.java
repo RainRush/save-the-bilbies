@@ -1,6 +1,7 @@
 public class Cat extends Animal {
   private int health;
   private Random randomUtils;
+  private static int GIVE_BIRTH_RATE = 20;
   
   public Cat() {
     super();
@@ -9,14 +10,9 @@ public class Cat extends Animal {
   }
 
   public Cat(String _uniqueId, boolean _bornDuringSimulation) {
-    super(_uniqueId, _bornDuringSimulation);
+    super(_uniqueId, _bornDuringSimulation, GIVE_BIRTH_RATE);
     health = 3;
     randomUtils = new Random();
-  }
-
-  public boolean giveBirthAttempt() {
-    int GIVE_BIRTH_RATE = 20;
-    return randomUtils.hasSucceedByPercentage(GIVE_BIRTH_RATE);
   }
 
   public boolean huntBilbyAttempt() {

@@ -1,18 +1,25 @@
 public class Animal {
   protected String uniqueId;
   protected boolean status;
+  protected int giveBirthRate;
   protected boolean bornDuringSimulation;
+  private Random randomUtils;
 
   protected Animal() {
     uniqueId = "";
     status = true;
+    giveBirthRate = 0;
     bornDuringSimulation = false;
+    randomUtils = new Random();
+
   }
 
-  protected Animal(String _uniqueId, boolean _bornDuringSimulation) {
+  protected Animal(String _uniqueId, boolean _bornDuringSimulation, int _giveBirthRate) {
     uniqueId = _uniqueId;
     status = true;
+    giveBirthRate = _giveBirthRate;
     bornDuringSimulation = _bornDuringSimulation;
+    randomUtils = new Random();
   }
 
   public String getUniqueId() {
@@ -43,25 +50,13 @@ public class Animal {
     return bornDuringSimulation;
   }
 
+  public boolean giveBirthAttempt() {
+    return randomUtils.hasSucceedByPercentage(giveBirthRate);
+  }
+
   public boolean checkAlive() {
     return status;
   }
-
-  // public boolean checkAliveInLocation(int locationId) {
-  //   boolean isAlive = this.checkAlive();
-  //   boolean isInLocation = this.getLocationId() == locationId;
-  //   return isAlive && isInLocation;
-  // }
-
-  // public boolean checkNotAliveInLocation(int locationId) {
-  //   boolean isNotAlive = !this.checkAlive();
-  //   boolean isInLocation = this.getLocationId() == locationId;
-  //   return isNotAlive && isInLocation;
-  // }
-
-  // public void relocateTo(int _locationId) {
-  //   locationId = _locationId;
-  // }
 
   protected void setDeath() {
     status = false;

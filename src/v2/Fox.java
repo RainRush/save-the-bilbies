@@ -1,6 +1,7 @@
 public class Fox extends Animal {
   private int health;
   private Random randomUtils;
+  private static int GIVE_BIRTH_RATE = 10;
   
   public Fox() {
     super();
@@ -9,14 +10,9 @@ public class Fox extends Animal {
   }
 
   public Fox(String _uniqueId, boolean _bornDuringSimulation) {
-    super(_uniqueId, _bornDuringSimulation);
+    super(_uniqueId, _bornDuringSimulation, GIVE_BIRTH_RATE);
     health = 3;
     randomUtils = new Random();
-  }
-
-  public boolean giveBirthAttempt() {
-    int GIVE_BIRTH_RATE = 10;
-    return randomUtils.hasSucceedByPercentage(GIVE_BIRTH_RATE);
   }
 
   public boolean huntBilbyAttempt() {
